@@ -14,7 +14,7 @@ export const SignUp = () => {
     try {
       let body = { name: name, email: email, password: password };
       const res = await axios.post(
-        "https://fb-backend-k1g2.onrender.com/api/auth/login",
+        "https://fb-backend-k1g2.onrender.com/api/auth/signup",
         body
       );
 
