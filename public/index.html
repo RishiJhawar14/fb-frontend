@@ -15,18 +15,75 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>React App</title>
   </head>
   <body>
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "872324047813798",
+          cookie: true, // Enable cookies to allow the server to access the session.
+          xfbml: true, // Parse social plugins on this webpage.
+          version: "v17.0", // Use this Graph API version for this call.
+        });
+      };
+
+      function statusChangeCallback(response) {
+        // Called with the results from FB.getLoginStatus().
+        console.log("statusChangeCallback");
+        console.log(response); // The current login status of the person.
+        if (response.status === "connected") {
+          // Logged into your webpage and Facebook.
+          testAPI();
+        }
+      }
+
+      function fblogin() {
+        FB.login(
+          function (response) {
+            if (response.authResponse) {
+              console.log(response);
+              localStorage.setItem("fb", JSON.stringify(response));
+              FB.api("/me", function (response) {
+                console.log(response);
+                console.log("Good to see you, " + response.name + ".");
+              });
+            } else {
+              console.log("User cancelled login or did not fully authorize.");
+            }
+          },
+          {
+            scope: "public_profile,email",
+            config_id: "328841062852082",
+          }
+        );
+      }
+
+      function checkLoginState() {
+        // Called when a person is finished with the Login Button.
+        FB.getLoginStatus(function (response) {
+          return response;
+        });
+      }
+
+      function testAPI() {
+        // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+        console.log("Welcome!  Fetching your information.... ");
+        FB.api("/me", function (response) {
+          console.log("Successful login for: " + response.name);
+          console.log(response.json());
+        });
+      }
+    </script>
+
+    <!-- Load the JS SDK asynchronously -->
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
+
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
